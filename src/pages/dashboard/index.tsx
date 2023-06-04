@@ -29,15 +29,15 @@ type Props = {
   pemText:string;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const tempText = await promises.readFile("walletKey/walletKey.pem",{ encoding: "utf8" });
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   // const tempText = await promises.readFile("walletKey/walletKey.pem",{ encoding: "utf8" });
 
-  return {
-    props: {
-      pemText: tempText
-    }
-  }
-}
+//   // return {
+//   //   props: {
+//   //     pemText: tempText
+//   //   }
+//   }
+// }
 
 // const FormatAmount = dynamic(
 //   async () => {

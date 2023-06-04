@@ -14,7 +14,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) { 
-    if(req.method === 'GET'){
+    if(req.method === 'POST'){
       console.log(req.body);
       //balance = req.body.coinBalance;
       res.redirect(307,`/unlock/50`)
