@@ -1,0 +1,27 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+'use client'
+
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { useState } from 'react'
+import { CoinsProvider, useCoinContext } from 'helpers/CoinContext'
+
+type Data = {
+  name?: string
+}
+let balance = 0;
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) { 
+    if(req.method === 'GET'){
+      console.log(req.body);
+      //balance = req.body.coinBalance;
+      res.redirect(307,`/unlock/50`)
+    }
+    else {
+      console.log('Day post bree !');
+    }
+    
+ 
+}
