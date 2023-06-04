@@ -1,0 +1,107 @@
+$bgColorDark : #222831;
+$darker: #1d222a;
+$limeGreenClr: #8ab722;
+
+.centeredMain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $bgColorDark;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    .centeredContent{
+        display: block;
+        margin-top: 5%;
+        width: 100%;
+    }
+    
+}
+
+.loginBtn {
+    padding: 15px;
+    border: 1px solid white;
+    font-size: 20px;
+    color: white;
+    background-color: aliceblue;
+}
+
+.transactionTable {
+    margin: auto;
+    width: 95%;
+
+    .dapp-core-component__transactionsTable {
+        border: 1px solid green;
+    }
+}
+
+.inputWrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+    background-color: $darker;
+    padding: 10px;
+
+    .currencyFields {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        // .currencyInput {
+        //     display: block;
+            
+        // }
+
+        // .currencyLabel{
+        //     display: block;
+        // }
+    }
+
+    .iconWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        border-radius: 60%;
+        background-color: #183153;
+        height: 40px;
+        width: 60px;
+        gap: 2px;
+        
+    }
+
+    .tokenFields {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+
+        .tokenLabel{
+            display: block;
+        }
+
+        .tokenInput {
+            display: block;
+        }
+    }
+
+    .buyBtn {
+        align-self: center;
+        background-color: transparent;
+        color: #ffffff;
+        font-weight: 400;
+        border: 1px solid  $limeGreenClr;
+        border-radius: 15px;
+        width: 10%;
+
+        &:hover{
+            background-color: $limeGreenClr;
+            transition: .3s;
+        }
+    }
+
+    .whiteText{
+        font-weight: 600;
+        color: white;
+    }
+}
