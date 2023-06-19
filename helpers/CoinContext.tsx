@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from "react";
 
 type cointContextType = {
-    balance: number;
-    setBalance: Dispatch<SetStateAction<number>>
+    balance: number | undefined;
+    setBalance: Dispatch<SetStateAction<number | undefined>> 
 }
 
 type Props = {
@@ -22,7 +22,7 @@ const CoinContext = createContext<cointContextType>({
 export const useCoinContext = () => useContext(CoinContext);
 
 export function CoinsProvider({children}: Props){
-    const [balance, setBalance] = useState<number>(0);
+    const [balance, setBalance] = useState<number>();
 
     // const setBalance = (num: number) => {
     //     setCoinBalance(num);

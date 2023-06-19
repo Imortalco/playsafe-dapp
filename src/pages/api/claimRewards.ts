@@ -14,14 +14,16 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) { 
-    if(req.method === 'POST'){
-      console.log(req.body);
-      //balance = req.body.coinBalance;
-      res.redirect(307,`/unlock/50`)
-    }
-    else {
-      console.log('Day post bree !');
-    }
+    // if(req.method === 'POST'){
+    //   console.log(req.body);
+    //   //balance = req.body.coinBalance;
+    //   res.redirect(307,`/unlock/50`)
+    // }
+    // else {
+    //   console.log('Day post bree !');
+    // }
     
+    let balance = req.query.balance;
+    res.redirect(307,`/unlock/${balance}`)
  
 }

@@ -14,7 +14,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 <AuthenticatedRoutesWrapper
                     routes={routes}
                     unlockRoute={`${routeNames.unlock}${query}`}
-                >
+                    >
                     <div className={utilStyles.centeredContent}>
                         {children}
                     </div>

@@ -1,0 +1,24 @@
+@use 'variables' as v;
+
+.balanceContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 40px;
+
+    .tokenBalanceText {
+        color: white;
+        font-weight: 500;
+        font-size: 30px;
+        border-bottom: 0.2px solid v.$lightTorq;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-left: 20px;
+        
+        .tokenBalanceValue {
+            font-weight: 200;
+            padding-left: 8px;
+        }
+    }
+
+    
+}

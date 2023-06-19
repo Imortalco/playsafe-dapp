@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { walletConnectV2ProjectId } from '../../../config';
 import { routeNames } from '../../../routes';
@@ -7,6 +9,7 @@ import dynamic from 'next/dynamic';
 import { CoinsProvider, useCoinContext } from 'helpers/CoinContext'
 import { loadGetInitialProps } from 'next/dist/shared/lib/utils';
 import { useRouter } from 'next/router';
+import utilStyles from '@/styles/utils.module.scss'
 
 const ExtensionLoginButton = dynamic(
     async () => {
@@ -44,32 +47,31 @@ const WebWalletLoginButton = dynamic(
 
 
 const UnlockPage = () => {
-    const commonProps = {
-        callbackRoute: routeNames.dashboard,
-        nativeAuth: true
-
-    };
-
-    const {balance, setBalance } = useCoinContext();
+    //const {balance, setBalance } = useCoinContext();
     const router = useRouter();
 
-    const  coinBalance  = router.query.coinBalance === undefined ? 0 : +router.query.coinBalance;
-    setBalance(coinBalance);
-    console.log(coinBalance);
+    let coinBalance  = router.query.coinBalance === undefined ? 0 : +router.query.coinBalance;
+
+    const commonProps = {
+        callbackRoute: `/claimRewards/${coinBalance}`,
+        nativeAuth: true,
+    };
 
     return (
         < >
-            {/* <Head>
-                <title>Next e bahti pumiqta</title>
-            </Head> */}
-            <div className='centeredButtons'>
-                
-                <ExtensionLoginButton loginButtonText='XPortal Chrome Extension' {...commonProps}/>
+            <div className={utilStyles.centeredButtons}>
+                <div className={utilStyles.chooseConnectionWrapper}>
+                    Connect to your wallet
+                    <span className={utilStyles.chooseConnectionText}>Choose one of the options below</span>
+                </div>
 
-                <WebWalletLoginButton loginButtonText='XPortal Web Wallet' {...commonProps}/>
+                <ExtensionLoginButton loginButtonText='XPortal Chrome Extension' {...commonProps} className={utilStyles.connectOptionBtn}/>
 
-                <LedgerLoginButton loginButtonText='Ledger' {...commonProps}/>
+                <WebWalletLoginButton loginButtonText='XPortal Web Wallet' {...commonProps} className={utilStyles.connectOptionBtn}/>
 
+                <LedgerLoginButton loginButtonText='Ledger' {...commonProps} className={utilStyles.connectOptionBtn}/>
+
+                <span className={utilStyles.createWalletText }>Don`t have a wallet? <a href='https://devnet-wallet.multiversx.com/create' target='blank'>Create one here</a></span>
                 {/* <WalletConnectLoginButton 
                 loginButtonText='WalletConnect Login' 
                 {...commonProps}

@@ -1,3 +1,5 @@
+'use client';
+
 import '@/styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { AppProps } from 'next/app';
@@ -42,15 +44,17 @@ export default function App({ Component, pageProps }: AppProps) {
         <DappProvider
           environment={EnvironmentsEnum.devnet}
         >
-          <CoinsProvider>
+         
             <MainLayout>
               <AxiosInterceptorContext.Listener />
               <TransactionsToastList />
               <NotificationModal />
               <SignTransactionsModals className='custom-class-for-modals' />
-              <Component {...pageProps} />
+              <CoinsProvider>
+                <Component {...pageProps} />
+              </CoinsProvider>
             </MainLayout>
-          </CoinsProvider>
+          
         </DappProvider>
       </AxiosInterceptorContext.Interceptor>
     </AxiosInterceptorContext.Provider>
