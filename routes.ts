@@ -5,6 +5,7 @@ export const routeNames = {
     dashboard: "/dashboard",
     statistics: "/statistics",
     unlock: "/unlock",
+    claimRewards: "/claimRewards"
   };
 
   interface RouteWithTitleType extends RouteType {
@@ -29,4 +30,10 @@ export const routeNames = {
       component: null,
       authenticatedRoute: true,
     },
+    {
+      path:routeNames.claimRewards,
+      title: "Claim Rewards",
+      component: null,
+      authenticatedRoute: true
+    }
   ];

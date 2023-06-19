@@ -4,7 +4,7 @@ import { Navbar as BsNavbar, NavItem, Nav } from 'react-bootstrap';
 import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks';
 import { routeNames } from '../../routes';
 import { dAppName } from '../../config';
-import navStyles from '@/styles/navbar.module.scss'
+import navStyles from '@/styles/navbar.module.scss';
 import { getAccountBalance } from '@multiversx/sdk-dapp/utils/account';
 
 export default function Navbar(){
@@ -17,10 +17,10 @@ export default function Navbar(){
     const { address, account} = useGetAccountInfo();
     
     return (
-        <BsNavbar className='bg-white border-bottom px-4 py-3'>
+        <BsNavbar className={navStyles.navBar}>
             <div className='container-fluid'>
                 <div className='d-flex align-items-center navbar-brand mr-0'>
-                    <span className='text-muted'>
+                    <span className={navStyles.whiteHeaderText}>
                         {dAppName}
                     </span>
                 </div>
@@ -29,7 +29,7 @@ export default function Navbar(){
                     {isLoggedIn && (
                         <>
                             <NavItem className={ navStyles.navItemCenteredContent }> 
-                                <span className='text-muted'>Hello, {account.username}</span>
+                                <span className='text-muted'> {account.username}</span>
                             </NavItem>
                             <NavItem>
                                 <button className='btn btn-outline-danger btn-small' onClick={handleLogout}>Logout</button>

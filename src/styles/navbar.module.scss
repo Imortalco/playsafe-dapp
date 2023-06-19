@@ -1,5 +1,19 @@
-.navItemCenteredContent {
-    display: flex;
-    align-items: center;
-    padding: 0 20px 0 20px;
+@use 'variables' as v;
+
+.navBar {
+    background-color: v.$darker;
+    border-bottom: 0.5px solid v.$darkTorq;
+
+    .navItemCenteredContent {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 0 20px;
+    }
+}
+
+
+.whiteHeaderText{
+    color:white;
+    font-weight: 800;
+    padding-left: 10px;
 }

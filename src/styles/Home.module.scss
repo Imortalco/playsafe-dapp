@@ -1,0 +1,54 @@
+@use 'variables' as v;
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+  font-size: 50px;
+  color:white;
+}
+
+.dAppNameWrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+
+  .dAppName {
+    font-size: 70px;
+    font-weight: 900;
+  }
+}
+
+.loginBtn {
+  text-decoration: none;
+  align-self: center;
+  background-color: transparent;
+  color: v.$lightTorq;
+  font-weight: 400;
+  font-size: 40px;
+  border: 0.5px solid  v.$lightTorq;
+  border-radius: 8px;
+  width: 150px;
+  padding: 5px 10px;
+  margin: 5px 10px;
+
+  a {
+      text-decoration: none;
+      color: v.$lightTorq;
+  }
+
+  &:hover{
+      background-color: v.$lightTorq;
+      transition: .15s ease-in-out;
+      color: #ffffff;
+
+      a{
+          color: white;
+      }
+  }
+}
+
