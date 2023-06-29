@@ -8,9 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import  ReactModal  from 'react-modal';
 
 
-import { sendTransactions } from '@multiversx/sdk-dapp/services';
-import { refreshAccount } from '@multiversx/sdk-dapp/utils';
-import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks';
+import { sendTransactions, calcTotalFee } from '@multiversx/sdk-dapp/services';
+import { refreshAccount, addressIsValid, formatAmount, FormatAmountType } from '@multiversx/sdk-dapp/utils';
+import { useGetAccountInfo, useGetNetworkConfig } from '@multiversx/sdk-dapp/hooks';
 
 
 import { Interaction, TokenTransfer } from "@multiversx/sdk-core";
@@ -39,13 +39,6 @@ type Props = {
 //   }
 // }
 
-// const FormatAmount = dynamic(
-//   async () => {
-//     return (await import('@multiversx/sdk-dapp/UI/FormatAmount')).FormatAmount;
-//   },
-//   { ssr: false }
-// );
-
 const FormatAmount = dynamic(
   async () => {
     return (await import('@multiversx/sdk-dapp/UI/FormatAmount')).FormatAmount;
@@ -58,25 +51,27 @@ export default function Dashboard({pemText} : Props) {
   const apiNetworkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
   const [currencyAmount, setCurrencyAmount] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
+  const [invalidAmountMsg, setInvalidAmountMsg] = useState('');
   const [accBalance, setAccBalance] = useState('');
-  
+  const [receiverAddress, setReceiverAddress] = useState<Address>(new Address(''));
+  const [invalidAddressMsg, setInvalidAddressMsg] = useState('');
+  const [gasFee, setGasFee] = useState<string>('');
   const { address, account} = useGetAccountInfo();
+  const {network} = useGetNetworkConfig();
   const  [, setTransactionSessionId] = useState<
 string | null>
 (null);
 const [isOpen, setIsOpen] = useState(false);
-const [networkConfig, setNetworkConfig] = useState<NetworkConfig>(new NetworkConfig());
-
+//const [networkConfig, setNetworkConfig] = useState<NetworkConfig>(new NetworkConfig());
+const factory = new TransferTransactionsFactory(new GasEstimator());
 let bHelper : BalanceHelper = new BalanceHelper(account.address);
 
 bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
  setAccBalance( response.toString() );
 });
-  
  
-
   let ownerAddress: Address = new Address('erd1jcqqtrt6zl0ve3cg2a5utyv83vmjp2yjxqt3gnjvccz50ugmpsxs4y5wl9');
-  let receiverAddress: Address = new Address('erd1r45kpejjgekq36ue8klvsrx324xs7x3pyk26qf6uhj346x766juqc8vuhx');
+  //let receiverAddress: Address = new Address('erd1r45kpejjgekq36ue8klvsrx324xs7x3pyk26qf6uhj346x766juqc8vuhx');
 
   let gasEstimator: GasEstimator = new GasEstimator();
   //let networkConfig: NetworkConfig = new NetworkConfig();
@@ -84,20 +79,31 @@ bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
   // apiNetworkProvider.getNetworkConfig().then((response) => {
   //   setNetworkConfig(response);
   // });
-
+  gasEstimator.forEGLDTransfer(12);
   let owner: Account = new Account(ownerAddress);
   const ownerVerifier = UserVerifier.fromAddress(ownerAddress);
   let tokenTicker:string = 'PSF-36ce19';
   let chainID: string;
+
   const tokenTransfer = async () => {
     
-    const factory = new TransferTransactionsFactory(new GasEstimator());
-    console.log(tokenAmount);
+    if(tokenAmount > Number(formatAmount({input: accBalance}))){
+        setInvalidAmountMsg("Amount cannot be greater than your balance !");
+        return;
+    }
+    else if(tokenAmount < 0){
+      setInvalidAmountMsg("Amount cannot be less than 0 !");
+      return;
+    }
+    else {
+      setInvalidAmountMsg("");   
+    }
+    
     const transfer = TokenTransfer.fungibleFromAmount('PSF-36ce19', tokenAmount , 18);
   
     const tx = factory.createESDTTransfer({
       tokenTransfer: transfer,
-      sender: ownerAddress,
+      sender: new Address(address),
       receiver: receiverAddress,
       chainID: 'D'
   });
@@ -109,10 +115,11 @@ bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
         errorMessage: 'Transaction has failed',
         successMessage: 'Transaction succesfull !'
       },
-      redirectAfterSign: false,
+      redirectAfterSign: true,
       skipGuardian: true,
     });
 
+    setIsOpen(false);
     await refreshAccount();
 
     
@@ -121,14 +128,48 @@ bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
     }
   }
  
-  const updateCurrencyAmount = (event:any) => {
-    setCurrencyAmount(event.target.value);
-    setTokenAmount(event.target.value/2);
-  }
+  // const updateCurrencyAmount = (event:any) => {
+  //   setCurrencyAmount(event.target.value);
+  //   setTokenAmount(event.target.value/2);
+  // }
 
   const updateTokenAmount = (event:any) => {
-    console.log('opaa');
-    setTokenAmount(event.target.value);
+    if(event.target.value != '' && Number(event.target.value) > 0){
+      setTokenAmount(event.target.value);
+
+      const transfer = TokenTransfer.fungibleFromAmount('PSF-36ce19', tokenAmount , 18);
+    
+      const tx = factory.createESDTTransfer({
+        tokenTransfer: transfer,
+        sender: new Address(address),
+        receiver: receiverAddress,
+        chainID: 'D'
+    });
+      setGasFee(`${formatAmount({input: String(calcTotalFee([tx], 1000))})} xEGLD`);
+    }
+    else{
+      setGasFee('');
+    }
+
+  }
+
+  const updateReceiverAdress = (event: any) => {
+    //setReceiverAddress(new Address(event.target.value));
+    if(event.target.value != ''){
+      let isValid: boolean = addressIsValid(event.target.value);
+
+      if(isValid === true){
+        setReceiverAddress(new Address(event.target.value));
+        setInvalidAddressMsg("");
+      }
+      else if(isValid === false) {
+        setInvalidAddressMsg("Invalid address !");
+      }
+    }
+    else{
+      setInvalidAddressMsg("");
+    }
+    
   }
 
     return <>
@@ -140,7 +181,8 @@ bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
 
           <div className={utilStyles.receiverContainer}>
               <label htmlFor='receiver-input'>Receiver</label>
-              <input id='receiver-input'></input>
+              <input id='receiver-input' onChange={updateReceiverAdress}></input>
+              <p className={utilStyles.errorMsg}>{invalidAddressMsg}</p>
           </div>
 
           <div className={utilStyles.amountContainer}>
@@ -152,12 +194,13 @@ bHelper.callMetaverseAPI(account.address).then(function(response:Number) {
                 
               </div>
               
-              <input id='amount-input' type='number' onChange={updateTokenAmount} ></input>
+              <input id='amount-input' type='number' min='0' onChange={updateTokenAmount}></input>
+              <p className={utilStyles.errorMsg}>{invalidAmountMsg}</p>
           </div>
 
           <div className={utilStyles.feeContainer}>
               <label htmlFor='fee-input'>Fee</label>
-              <input id='fee-input' value='0.00'></input>
+              <input id='fee-input' type='text' value={gasFee}></input>
           </div>
 
           <button className={utilStyles.sendBtn} onClick={tokenTransfer}>Send PSF</button>
